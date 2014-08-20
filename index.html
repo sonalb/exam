@@ -1,0 +1,296 @@
+<!DOCTYPE HTML>
+<html>
+    <head>  
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+        
+		<link href="css/main.css" type="text/css" rel="stylesheet" />
+        <link href="css/bootstrap.min.css" rel="stylesheet">
+		<script src="js/jquery.min.js"></script>
+        <script type="text/javascript" src="js/jquery.touchSwipe.min.js"></script>
+        <script type="text/javascript" src="js/main.js"></script>
+        
+        <title>HTML5 Assignment</title>
+		<style>
+    	#mainimage
+    	{
+   			background-image: url('baby1.jpg');
+			background-size: 100% 100%;
+			background-repeat: no-repeat;
+			width: 100%;
+			margin:0 auto;
+			
+		}
+		#topmenudiv{
+			text-align:center;
+   			cursor:pointer;
+   			height:50px;
+		}
+   		.topmenu
+   		{
+   			width:15%; 
+   			
+   		}
+   		.topmenu:hover
+   		{
+	   		width:15%; 
+	   		text-align:center;
+	   		color:#428bca;
+	   		background-color:#EEEEEE;
+	   		cursor:pointer;
+	   		height:50px;
+	   	}
+   		#topmenudiv table td 
+   		{
+   			border:1.5px solid black;
+   		}
+   		#bottommenu td
+   		{
+   			border-right:1.5px solid black;
+   		}
+   		.topmenumiddle
+   		{
+	   		width:70%; 
+	   		
+	   		height:50px;
+	   	}
+   		.topmenumiddle:hover
+		{
+	   		width:70%; 
+	   		text-align:center;
+	   		color:#428bca;
+	   		cursor:pointer;
+	   		background-color:#eee;
+	   	}
+   	
+   		.bottomnav
+		{
+	   		width:33%; 
+	   		text-align:center;
+	   		color:black;
+	   		cursor:pointer;
+   		}
+   	
+   		.bottomnav:hover
+		{
+   			background-color:#eee;
+   			color: #428bca;
+   		}
+   		
+   		#bottommenu
+		{
+   			background-color: #00B38B;
+   			opacity: 0.6;
+			height:50px;
+   		}
+		.content
+		 {
+			padding: 3%;
+			background-color: white;
+			width: 80%;
+			margin: 0 auto;
+			border-radius: 24px;
+		  }
+   	</style>
+   
+   
+		<script id='code_1'>
+			
+				var previous_distance=0;
+				var height=0;
+				var contentdivheight=0;
+				var imageDivHeight=0;
+				var new_topBottomMenuMargin=0;
+				var imageTopMargin=0;
+				var speedyDistance=0;
+				$(document).ready(function(){
+					height = window.innerHeight;
+					$('#mainimage').height(height-100+'px');
+					$('#mainBody').height(height+'px');
+					$('#bottommenu').css('margin-top','-50px');
+					contentdivheight = $("#contentdiv").height();
+					imageDivHeight=$("#mainimage").height();
+					
+				});
+				$(function() {			
+					//Enable swiping...
+					$("#mainBody").swipe( {
+						swipeStatus:function(event, phase, direction, distance, duration, fingers)
+						{
+							if(phase=='start')
+							{
+								new_topBottomMenuMargin = $("#bottommenu").css('margin-top');
+								new_topBottomMenuMargin=new_topBottomMenuMargin.replace("px","");
+								new_topBottomMenuMargin = parseInt(new_topBottomMenuMargin) * -1;	
+								imageDivHeight=$("#mainimage").height();
+								imageTopMargin=$("#mainimage").css('background-position-y');
+								
+								
+							}
+							if(phase=='move')
+							{
+								
+								top_bottommenu_margin = $("#bottommenu").css('margin-top');
+								top_bottommenu_margin=top_bottommenu_margin.replace("px","");
+								top_bottommenu_margin = parseInt(top_bottommenu_margin) * -1;								
+								var speed=distance/duration;
+								
+									if(speed > 0.7 && direction == 'up')
+									{
+										speedyDistance=distance*2;
+									}
+									else
+									speedyDistance=distance;
+							}
+							
+							if(direction == 'up')
+							{
+								
+								//to move div up from current position
+								current_moving_distance=previous_distance+(speedyDistance/2);
+								top_bottommenu_margin = $("#bottommenu").css('margin-top');
+								top_bottommenu_margin = top_bottommenu_margin.replace("px","");
+								top_bottommenu_margin = parseInt(top_bottommenu_margin) * -1;
+								$("#topmenudiv").css('background-color','#00B38B');
+								
+								//To stop moving of background image
+								if((top_bottommenu_margin) >=(imageDivHeight/2))
+								{
+								if((top_bottommenu_margin+150) >= (height))
+									{
+										
+										//to set bottom menu below the top menu
+										$("#bottommenu").css('margin-top','-'+(height-150)+'px');
+										$("#bottommenu").css('opacity','1');
+										$("#topmenudiv").css('opacity','0.7');
+										$("#topmenudiv").css('background-color','#00B38B');
+										$('#topmenudiv table td').css('border','none'); 
+										$('#bottommenu td').css('border','none');
+										$("#contentdiv").css('height',imageDivHeight);
+										previous_distance = height - 200;
+										return false;
+										
+									}
+									else
+									{
+										//because initially the position is minus -50px 
+										$("#bottommenu").css('opacity','0.9');
+										$("#topmenudiv").css('opacity','0.5');
+										if(current_moving_distance < 50)
+										{
+											current_moving_distance = 50;
+										}
+										//to cut image from both the side..extra cut from bottom
+										$("#bottommenu").css('margin-top','-'+(new_topBottomMenuMargin+speedyDistance)+'px');
+										$("#contentdiv").css('height',imageDivHeight);
+										previous_distance=current_moving_distance;
+										
+									}
+									
+								}								
+								else
+								{
+									//because initially the position is minus -50px 
+									if(current_moving_distance < 50){
+										current_moving_distance = 50;
+									}
+									
+									//to cut image from both the side..extra cut from bottom
+									$("#bottommenu").css('margin-top','-'+(new_topBottomMenuMargin+speedyDistance)+'px');
+									
+									//move background div up by distance/2
+									$("#mainimage").css('background-position',"0px -"+((new_topBottomMenuMargin+speedyDistance)-50)+'px');
+									$("#bottommenu").css('opacity','0.8');
+									$("#topmenudiv").css('opacity','0.3');
+								}
+							}
+							
+							else if(direction == 'down')
+							{
+								// to set margin top to default position 
+								$("#contentdiv").css('margin-top','0px');
+								
+								if((top_bottommenu_margin) >=((imageDivHeight/2)+50))
+								{
+										console.log("in if = new_topBottomMenuMargin "+new_topBottomMenuMargin +" speedyDistance "+speedyDistance);
+										$("#mainimage").css('background-position',"0px -"+((imageDivHeight/2)-50)+'px');
+										$("#bottommenu").css('margin-top','-'+(new_topBottomMenuMargin - speedyDistance)+'px');
+										$("#bottommenu").css('opacity','0.9');
+										$("#topmenudiv").css('opacity','0.5');
+								}
+								else
+								{		
+										console.log("down else of half "+top_bottommenu_margin+" speedyDistance "+speedyDistance+" cal "+((new_topBottomMenuMargin-speedyDistance)+50));
+										if(top_bottommenu_margin <= 100  )
+										{
+											$("#mainimage").css('background-position',"0px 0px");
+											$("#bottommenu").css('margin-top','-50px');
+											$("#topmenudiv").css('background-color','transparent');
+											$("#topmenudiv").css('opacity','1');
+											$('#bottommenu').css('opacity','0.6');
+										}
+										else
+										{
+											var a=(new_topBottomMenuMargin-speedyDistance);
+											
+											$("#bottommenu").css('margin-top','-'+a+'px');
+											$("#mainimage").css('background-position',"0px -"+(a-50)+'px');
+											$("#bottommenu").css('opacity','0.8');
+											$("#topmenudiv").css('opacity','0.3');
+										}
+								}
+								
+								$('#topmenudiv table td').css('border','1px solid black'); 
+								$('#bottommenu td').css('border','1px solid black');
+								previous_distance = previous_distance - (speedyDistance/2);
+							}
+						},
+						threshold:100
+						
+					});
+				});
+			</script>
+	</head>
+	<body id="mainBody">
+		<div class="container">  
+  			<div  id="mainimage">
+  				<div id="topmenudiv">
+  					<table style="width:100%;border:1px solid black;">
+      					<tr>
+			      			<td class="topmenu" ><span class="glyphicon glyphicon-signal"></span> Star</td>
+			      			<td class="topmenumiddle"><span class="glyphicon glyphicon-th-list"></span> Start</td>
+			      			<td class="topmenu"><span class="glyphicon glyphicon-search"></span> Search</td>
+      					</tr>
+			      	</table>  
+  				</div>
+			  	
+		 	</div>
+		 	<div class="bottommenudiv" > 
+			 		<table style="width:100%;" id="bottommenu">
+			      		<tr>
+			      			<td class="bottomnav" ><span class="glyphicon glyphicon-envelope"></span> Message</td>
+    			  			<td class="bottomnav"><span class="glyphicon glyphicon-home"></span> Home</td>
+      						<td class="bottomnav"><span class="glyphicon glyphicon-camera"></span> Camera</td>
+      					</tr>
+      				</table> 
+      				<div id="contentdiv" style="background-color:#79A395;">
+      				<br>
+						<div class='content'>
+							<h2>Nathan</h2>
+							<p>Vong</p>
+							<p>Bluebird It</p>
+							<p>CEO</p>
+							</div>
+							<br/>
+							<div class='content'>
+							<h2>Nathan</h2>
+							<p>Vong</p>
+							<p>Bluebird It</p>
+							<p>CEO</p>
+							</div>
+							<br/>
+						</div>
+      				
+ 				</div>
+ 		</div>        
+	</body>
+</html>
